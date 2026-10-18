@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>אוטומציה לשיתוף חומרי קורס</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Rubik:wght@500;600;700&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #0F2A3D;
+    --text: #2B3F51;
+    --muted: #5A6D7E;
+    --brand: #0E7C7B;
+    --brand-dark: #0A5F5E;
+    --brand-soft: #E8F4F3;
+    --bg: #FFFFFF;
+    --alt: #F5F8FA;
+    --line: #E1E8ED;
+    --amber: #F4C25B;
+    --danger: #B3261E;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(15, 42, 61, 0.06), 0 12px 32px -12px rgba(15, 42, 61, 0.18);
+    --font-head: "Rubik", "Heebo", "Arial Hebrew", Arial, sans-serif;
+    --font-body: "Heebo", "Arial Hebrew", Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--font-body); font-size: 17px; line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--font-head); color: var(--ink); margin: 0; line-height: 1.25; text-wrap: balance; }
+  h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); font-weight: 700; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(1.6rem, 3vw, 2.15rem); font-weight: 600; }
+  h3 { font-size: 1.15rem; font-weight: 600; }
+  p { margin: 0; }
+  .wrap { max-width: 1120px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); }
+  section { padding-block: clamp(56px, 8vw, 96px); }
+  .alt { background: var(--alt); }
+  .eyebrow { display: inline-block; font-size: 0.9rem; font-weight: 700; color: var(--brand-dark); background: var(--brand-soft); padding: 4px 14px; border-radius: 999px; }
+  .section-head { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; max-width: 40em; }
+  .lead { font-size: 1.1rem; color: var(--muted); max-width: 36em; }
+
+  /* Header */
+  header.top { border-bottom: 1px solid var(--line); background: var(--bg); }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 68px; }
+  .brand { font-family: var(--font-head); font-weight: 600; color: var(--ink); font-size: 1.05rem; }
+
+  /* Buttons */
+  .btn {
+    font: inherit; font-family: var(--font-head); font-weight: 600; font-size: 1rem; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--brand); color: #fff; border: 0; border-radius: 12px; padding: 13px 24px;
+    transition: background 0.15s ease;
+  }
+  .btn:hover { background: var(--brand-dark); }
+  .btn.small { padding: 9px 18px; font-size: 0.95rem; }
+  .btn.light { background: #fff; color: var(--ink); }
+  .btn.light:hover { background: var(--brand-soft); }
+  .btn:focus-visible, input:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+
+  /* Hero */
+  .hero { background: linear-gradient(180deg, var(--brand-soft) 0%, var(--bg) 100%); padding-block: clamp(40px, 7vw, 88px); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(32px, 6vw, 72px); align-items: center; }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+  .checks { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .checks li { display: flex; gap: 12px; align-items: flex-start; color: var(--ink); font-weight: 500; }
+  .checks svg { flex: none; width: 24px; height: 24px; margin-top: 3px; color: var(--brand); }
+
+  /* Form */
+  .form-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: clamp(22px, 3.5vw, 36px); box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .form-card h2 { font-size: 1.55rem; }
+  .form-card .sub { color: var(--muted); font-size: 0.98rem; margin-top: 6px; }
+  form { display: flex; flex-direction: column; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  label { font-weight: 700; font-size: 0.95rem; color: var(--ink); }
+  input {
+    font: inherit; font-size: 1rem; color: var(--ink); background: #fff;
+    border: 1.5px solid #C9D5DD; border-radius: 10px; padding: 12px 14px; width: 100%; min-width: 0;
+  }
+  input:hover { border-color: #9FB2BF; }
+  input:focus { border-color: var(--brand); }
+  input[dir="ltr"] { text-align: right; }
+  input[aria-invalid="true"] { border-color: var(--danger); }
+  .err { color: var(--danger); font-size: 0.9rem; }
+  .err:empty { display: none; }
+  form .btn { width: 100%; padding-block: 14px; }
+  .notice { border: 1px dashed #C9D5DD; border-radius: 10px; padding: 12px 14px; font-size: 0.92rem; color: var(--muted); background: var(--alt); }
+  .notice strong { color: var(--ink); }
+  .done { display: flex; flex-direction: column; gap: 14px; outline: none; }
+  .done-mark { width: 60px; height: 60px; color: var(--brand); }
+  .done h2 { font-size: 1.7rem; }
+  .done p { color: var(--muted); }
+  .done p.who { color: var(--ink); font-size: 1.1rem; }
+
+  /* Cards */
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 40px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 10px; }
+  .card p { color: var(--muted); }
+  .icon { width: 48px; height: 48px; border-radius: 12px; background: var(--brand-soft); color: var(--brand-dark); display: grid; place-items: center; margin-bottom: 6px; }
+  .icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .step-no { width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-family: var(--font-head); font-weight: 600; margin-bottom: 6px; }
+  .after-steps { margin-top: 28px; color: var(--ink); font-weight: 700; }
+
+  /* Comparison */
+  .compare { display: flex; flex-direction: column; gap: 26px; margin-top: 40px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 3vw, 36px); }
+  .row { display: flex; flex-direction: column; gap: 10px; }
+  .row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .row-head .who { font-weight: 700; color: var(--ink); }
+  .row-head .val { font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; color: var(--ink); }
+  .track { height: 22px; background: var(--alt); border-radius: 999px; overflow: hidden; display: flex; justify-content: flex-start; }
+  .bar { height: 100%; background: #7C8E9C; border-radius: 999px; }
+  .bar.auto { background: var(--brand); width: 0.035%; min-width: 5px; }
+  .scale-note { color: var(--muted); font-size: 0.9rem; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 24px; }
+  .stat { background: var(--brand-soft); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 6px; }
+  .stat .n { font-family: var(--font-head); font-weight: 700; font-size: clamp(2rem, 4.5vw, 2.8rem); color: var(--brand-dark); line-height: 1.15; }
+  .stat .n small { font-size: 0.45em; font-weight: 600; color: var(--muted); }
+  .stat p { color: var(--text); }
+
+  /* Closing */
+  .closing { background: var(--ink); color: #fff; text-align: center; }
+  .closing .inner { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .closing h2 { color: #fff; max-width: 22em; }
+  .closing p { color: #C5D3DD; max-width: 34em; }
+  footer { padding-block: 28px; color: var(--muted); font-size: 0.95rem; border-top: 1px solid var(--line); }
+
+  @media (max-width: 880px) {
+    .hero-grid { grid-template-columns: minmax(0, 1fr); }
+    .grid3, .pair { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <span class="brand">אוטומציה לשיתוף חומרי קורס</span>
+    <button class="btn small" type="button" data-to-form>השאירו פרטים</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">למרצים ולמרצות</span>
+        <h1>תלמידים נרשמים לקורס, והחומרים מגיעים אליהם בלי שתשלחו אותם</h1>
+        <p class="lead">אוטומציה שמחברת את טופס ההרשמה לקורס לתיקיית ה-Drive. הקישור נשלח לכל תלמיד במייל, מיד עם ההרשמה.</p>
+        <ul class="checks">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-7"/></svg>הקישור לתיקיית הקורס מגיע לתלמיד מיד עם ההרשמה</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-7"/></svg>ללא פעולה ידנית מצד המרצה</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-7"/></svg>חיסכון של כ-30 דקות עבודה בכל פתיחת מחזור</li>
+        </ul>
+      </div>
+
+      <div class="form-card" id="form">
+        <div id="form-head">
+          <h2>השאירו פרטים</h2>
+          <p class="sub">הירשמו למוצר ונעדכן אתכם כשהוא יוצא לפועל.</p>
+        </div>
+        <form id="lead-form" novalidate>
+          <div class="field">
+            <label for="full-name">שם מלא</label>
+            <input id="full-name" name="full-name" type="text" autocomplete="name" aria-describedby="err-name">
+            <div class="err" id="err-name" role="alert"></div>
+          </div>
+          <div class="field">
+            <label for="phone">מספר טלפון</label>
+            <input id="phone" name="phone" type="tel" dir="ltr" autocomplete="tel" inputmode="tel" aria-describedby="err-phone">
+            <div class="err" id="err-phone" role="alert"></div>
+          </div>
+          <div class="field">
+            <label for="email">כתובת מייל</label>
+            <input id="email" name="email" type="email" dir="ltr" autocomplete="email" inputmode="email" aria-describedby="err-email">
+            <div class="err" id="err-email" role="alert"></div>
+          </div>
+          <button class="btn" type="submit">שליחת פרטים</button>
+        </form>
+        <div class="done" id="done" role="status" tabindex="-1" hidden>
+          <svg class="done-mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="3"/><path d="M14 25l7 7 13-17" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h2>הפרטים שלכם נשמרו</h2>
+          <p class="who">תודה, <span id="done-name"></span>. ניצור איתכם קשר בטלפון או במייל שהשארתם, ברגע שהמוצר יצא לפועל.</p>
+          <p>אין צורך בפעולה נוספת מצדכם.</p>        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">הבעיה</span>
+        <h2>בכל מחזור מחדש, אותה עבודה ידנית</h2>
+      </div>
+      <div class="grid3">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>זמן תפעולי יקר</h3>
+          <p>פתיחת תיקייה ושליחת חומרים ידנית לכל סטודנט גוזלת זמן בכל מחזור מחדש.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12M6 21h12M7 3v3.5c0 1.5 5 3.5 5 5.5s-5 4-5 5.5V21M17 3v3.5c0 1.5-5 3.5-5 5.5s5 4 5 5.5V21"/></svg></div>
+          <h3>תלמידים ממתינים</h3>
+          <p>התהליך הידני יוצר עיכובים, והתלמידים ממתינים זמן ממושך לקבלת חומרי הלימוד.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 013-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 01-3 3H3"/></svg></div>
+          <h3>חזרה על אותן פעולות</h3>
+          <p>מי שנרשם באיחור מחייב לחזור ידנית על כל פעולות מתן הגישה מההתחלה.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">איך זה עובד</span>
+        <h2>שלושה שלבים, ואף אחד מהם לא עובר דרככם</h2>
+      </div>
+      <div class="grid3">
+        <div class="card">
+          <div class="step-no">1</div>
+          <h3>התלמיד ממלא טופס הרשמה</h3>
+          <p>שם מלא, מספר טלפון וכתובת מייל.</p>
+        </div>
+        <div class="card">
+          <div class="step-no">2</div>
+          <h3>האוטומציה מקבלת את הפרטים</h3>
+          <p>היא מזהה נרשם שכבר קיים במערכת, ולא שולחת לו את המייל פעם נוספת.</p>
+        </div>
+        <div class="card">
+          <div class="step-no">3</div>
+          <h3>התלמיד מקבל מייל אישי</h3>
+          <p>במייל קישור ישיר לתיקיית הקורס ב-Drive, מיד עם השלמת ההרשמה.</p>
+        </div>
+      </div>
+      <p class="after-steps">התהליך מתנהל ברקע, בלי פעולה מצד המרצה.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">החיסכון</span>
+        <h2>מרגע ההרשמה ועד שהקישור אצל התלמיד</h2>
+      </div>
+      <div class="compare">
+        <div class="row">
+          <div class="row-head"><span class="who">היום, בתהליך ידני</span><span class="val">עד יומיים</span></div>
+          <div class="track" role="img" aria-label="פס ארוך שמייצג זמן המתנה של עד יומיים"><div class="bar" style="width:100%"></div></div>
+        </div>
+        <div class="row">
+          <div class="row-head"><span class="who">עם האוטומציה (יעד)</span><span class="val">כדקה אחת</span></div>
+          <div class="track" role="img" aria-label="פס קצר מאוד שמייצג זמן של כדקה אחת"><div class="bar auto"></div></div>
+        </div>
+        <p class="scale-note">הפסים בקנה מידה. יומיים הם 2,880 דקות, ולכן הפס של הדקה האחת כמעט אינו נראה.</p>
+      </div>
+      <div class="pair">
+        <div class="stat">
+          <div class="n">כ-30 <small>דקות</small> ← 0</div>
+          <p>עבודה ידנית בכל פתיחת מחזור או קורס. היעד עם האוטומציה: אפס דקות.</p>
+        </div>
+        <div class="stat">
+          <div class="n">אפס שכחה</div>
+          <p>כל נרשם מקבל את הגישה בלי שמישהו צריך לזכור לשלוח אותה, גם כשההרשמה מאוחרת.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">כשמשהו משתבש</span>
+        <h2>המקרים החריגים כבר מטופלים</h2>
+      </div>
+      <div class="grid3">
+        <div class="card">
+          <h3>כתובת מייל שגויה</h3>
+          <p>הטופס לא נשלח, ומוצג הסבר ליד השדה הבעייתי.</p>
+        </div>
+        <div class="card">
+          <h3>מילוי כפול</h3>
+          <p>כתובת מייל שכבר קיימת במערכת לא מקבלת את המייל שוב.</p>
+        </div>
+        <div class="card">
+          <h3>תקלה במערכת האוטומציה</h3>
+          <p>מתבצע ניסיון חוזר אוטומטי, ובתקלה מתמשכת מועברת התראה למנהל המערכת.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap inner">
+      <h2>מתחילים לחסוך זמן בקורסים שלכם</h2>
+      <p>השאירו פרטים, ונעדכן אתכם כשהמוצר יוצא לפועל.</p>
+      <button class="btn light" type="button" data-to-form>לטופס ההרשמה</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">קארינה דרור</div>
+</footer>
+
+<script>
+  var form = document.getElementById("lead-form");
+  var doneBox = document.getElementById("done");
+  var formHead = document.getElementById("form-head");
+  var fields = {
+    name: { input: document.getElementById("full-name"), err: document.getElementById("err-name") },
+    phone: { input: document.getElementById("phone"), err: document.getElementById("err-phone") },
+    email: { input: document.getElementById("email"), err: document.getElementById("err-email") }
+  };
+
+  function check(key) {
+    var v = fields[key].input.value.trim();
+    if (key === "name") {
+      return v ? "" : "חסר שם מלא.";
+    }
+    if (key === "phone") {
+      if (!v) return "חסר מספר טלפון.";
+      var digits = v.replace(/\D/g, "");
+      if (!/^[\d\s\-+()]+$/.test(v) || digits.length < 9 || digits.length > 15) {
+        return "מספר הטלפון אינו תקין. הזינו לפחות 9 ספרות.";
+      }
+      return "";
+    }
+    if (!v) return "חסרה כתובת מייל. בלעדיה לא נוכל ליצור איתכם קשר.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+      return "כתובת המייל אינה תקינה. בדקו שהיא כוללת @ ושם דומיין.";
+    }
+    return "";
+  }
+
+  function show(key, msg) {
+    fields[key].err.textContent = msg;
+    fields[key].input.setAttribute("aria-invalid", msg ? "true" : "false");
+  }
+
+  Object.keys(fields).forEach(function (key) {
+    fields[key].input.addEventListener("input", function () {
+      if (fields[key].err.textContent) show(key, check(key));
+    });
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(fields).forEach(function (key) {
+      var msg = check(key);
+      show(key, msg);
+      if (msg && !firstBad) firstBad = fields[key].input;
+    });
+    if (firstBad) { firstBad.focus(); return; }
+    document.getElementById("done-name").textContent = fields.name.input.value.trim();
+    form.hidden = true;
+    formHead.hidden = true;
+    doneBox.hidden = false;
+    doneBox.focus();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-to-form]"), function (btn) {
+    btn.addEventListener("click", function () {
+      document.getElementById("form").scrollIntoView({ behavior: "smooth", block: "center" });
+      if (!form.hidden) document.getElementById("full-name").focus({ preventScroll: true });
+    });
+  });
+</script>
+</body>
+</html>
