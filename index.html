@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>אוטומציה לשיתוף חומרי קורס</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700&family=Rubik:wght@500;600;700&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #0F2A3D;
+    --text: #2B3F51;
+    --muted: #5A6D7E;
+    --brand: #0E7C7B;
+    --brand-dark: #0A5F5E;
+    --brand-soft: #E8F4F3;
+    --bg: #FFFFFF;
+    --alt: #F5F8FA;
+    --line: #E1E8ED;
+    --field-border: #7A8D9B;
+    --amber: #F4C25B;
+    --danger: #B3261E;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(15, 42, 61, 0.06), 0 12px 32px -12px rgba(15, 42, 61, 0.18);
+    --font-head: "Rubik", "Heebo", "Arial Hebrew", Arial, sans-serif;
+    --font-body: "Heebo", "Arial Hebrew", Arial, sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--font-head); color: var(--ink); margin: 0; line-height: 1.25; text-wrap: balance; }
+  h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); font-weight: 700; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(1.6rem, 3vw, 2.15rem); font-weight: 600; }
+  h3 { font-size: 1.15rem; font-weight: 600; }
+  p { margin: 0; }
+  .wrap { max-width: 1120px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); }
+  section { padding-block: clamp(56px, 8vw, 96px); }
+  .alt { background: var(--alt); }
+  .eyebrow { display: inline-block; font-size: 0.9rem; font-weight: 700; color: var(--brand-dark); background: var(--brand-soft); padding: 4px 14px; border-radius: 999px; }
+  .section-head { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; max-width: 40em; }
+  .lead { font-size: 1.1rem; color: var(--muted); max-width: 36em; }
+
+  /* Header */
+  header.top { border-bottom: 1px solid var(--line); background: var(--bg); }
+  header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 68px; flex-wrap: wrap; padding-block: 8px; }
+  header.top .brand-wrapper { display: flex; align-items: center; gap: 14px; }
+  header.top .logo { height: 56px; width: auto; object-fit: contain; }
+  header.top .btn { margin-inline-start: auto; }
+  .brand { font-family: var(--font-head); font-weight: 600; color: var(--ink); font-size: 1.05rem; }
+
+  /* Buttons */
+  .btn {
+    font: inherit; font-family: var(--font-head); font-weight: 600; font-size: 1rem; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--brand); color: #fff; border: 0; border-radius: 12px; padding: 13px 24px;
+    text-decoration: none; transition: background 0.15s ease;
+  }
+  .btn:hover { background: var(--brand-dark); }
+  .btn.small { padding: 9px 18px; font-size: 0.95rem; }
+  .btn.light { background: #fff; color: var(--ink); }
+  .btn.light:hover { background: var(--brand-soft); }
+  .btn:focus-visible, input:focus-visible, a:focus-visible, main:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .closing .btn:focus-visible { outline-color: var(--amber); }
+  main:focus, h1[tabindex="-1"]:focus { outline: none; }
+
+  /* Accessibility helpers */
+  .skip { position: absolute; top: -100px; inset-inline-start: 16px; z-index: 2000; background: var(--ink); color: #fff; font-family: var(--font-head); font-weight: 600; padding: 10px 18px; border-radius: 10px; text-decoration: none; }
+  .skip:focus { top: 12px; outline: 3px solid var(--amber); outline-offset: 2px; }
+  .req-note { color: var(--muted); font-size: 0.9rem; }
+  ol.grid3 { list-style: none; padding: 0; margin-bottom: 0; }
+
+  /* Hero */
+  .hero { background: linear-gradient(180deg, var(--brand-soft) 0%, var(--bg) 100%); padding-block: clamp(40px, 7vw, 88px); }
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(32px, 6vw, 72px); align-items: center; }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+  .checks { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; gap: 10px; }
+  .checks li { display: flex; gap: 12px; align-items: flex-start; color: var(--ink); font-weight: 500; }
+  .checks svg { flex: none; width: 24px; height: 24px; margin-top: 3px; color: var(--brand); }
+
+  /* Form */
+  .form-card { background: #fff; border: 1px solid var(--line); border-radius: 20px; padding: clamp(22px, 3.5vw, 36px); box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .form-card h2 { font-size: 1.55rem; }
+  .form-card .sub { color: var(--muted); font-size: 0.98rem; margin-top: 6px; }
+  form { display: flex; flex-direction: column; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; position: relative; }
+  label { font-weight: 700; font-size: 0.95rem; color: var(--ink); }
+  input {
+    font: inherit; font-size: 1rem; color: var(--ink); background: #fff;
+    border: 1.5px solid var(--field-border); border-radius: 10px; padding: 12px 14px; width: 100%; min-width: 0;
+  }
+  input:hover { border-color: var(--text); }
+  input:focus { border-color: var(--brand); }
+  input[dir="ltr"] { text-align: right; }
+  input[aria-invalid="true"] { border-color: var(--danger); }
+  .err { color: var(--danger); font-size: 0.9rem; }
+  .err:empty { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  form .btn { width: 100%; padding-block: 14px; }
+  .done { display: flex; flex-direction: column; gap: 14px; outline: none; }
+  .done-mark { width: 60px; height: 60px; color: var(--brand); }
+  .done h2 { font-size: 1.7rem; }
+  .done p { color: var(--muted); }
+  .done p.who { color: var(--ink); font-size: 1.1rem; }
+
+  /* Cards */
+  .grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin-top: 40px; }
+  .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 10px; }
+  .card p { color: var(--muted); }
+  .icon { width: 48px; height: 48px; border-radius: 12px; background: var(--brand-soft); color: var(--brand-dark); display: grid; place-items: center; margin-bottom: 6px; }
+  .icon svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .step-no { width: 40px; height: 40px; border-radius: 50%; background: var(--brand); color: #fff; display: grid; place-items: center; font-family: var(--font-head); font-weight: 600; margin-bottom: 6px; }
+  .after-steps { margin-top: 28px; color: var(--ink); font-weight: 700; }
+
+  /* Comparison (no figures, wording only) */
+  .compare { display: flex; flex-direction: column; gap: 26px; margin-top: 40px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 3vw, 36px); }
+  .row + .row { border-top: 1px solid var(--line); padding-top: 26px; }
+  .row-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap; }
+  .row-head .who { font-weight: 700; color: var(--ink); }
+  .row-head .val { font-family: var(--font-head); font-weight: 700; font-size: 1.5rem; color: var(--ink); }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 24px; }
+  .stat { background: var(--brand-soft); border-radius: var(--radius); padding: 28px; display: flex; flex-direction: column; gap: 6px; }
+  .stat .n { font-family: var(--font-head); font-weight: 700; font-size: clamp(1.7rem, 3.6vw, 2.2rem); color: var(--brand-dark); line-height: 1.2; }
+  .stat p { color: var(--text); }
+
+  /* Closing */
+  .closing { background: var(--ink); color: #fff; text-align: center; }
+  .closing .inner { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+  .closing h2 { color: #fff; max-width: 22em; }
+  .closing p { color: #C5D3DD; max-width: 34em; }
+  footer { padding-block: 28px; color: var(--muted); font-size: 0.95rem; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+  footer .disclaimer { flex-basis: 100%; }
+  .statement { display: flex; flex-direction: column; gap: 14px; max-width: 46em; min-width: 0; overflow-wrap: anywhere; }
+  .statement h2 { font-size: 1.35rem; margin-top: 14px; }
+  .statement ul { margin: 0; padding-inline-start: 1.3em; display: flex; flex-direction: column; gap: 6px; }
+  .statement-date { color: var(--muted); font-size: 0.95rem; }
+  .statement a:not(.btn), footer a { color: var(--brand-dark); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .statement a:not(.btn):hover, footer a:hover { color: var(--ink); }
+  .page-top { padding-block: clamp(40px, 6vw, 72px); }
+
+  /* Accessibility widget */
+  .a11y-widget { position: fixed; z-index: 1000; right: max(12px, env(safe-area-inset-right, 0px)); top: calc(10px + env(safe-area-inset-top, 0px)); display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .a11y-fab { width: 54px; height: 54px; border-radius: 50%; border: 2px solid #fff; background: var(--ink); color: #fff; cursor: pointer; display: grid; place-items: center; box-shadow: 0 6px 18px rgba(15, 42, 61, 0.35); padding: 0; }
+  .a11y-fab svg { width: 28px; height: 28px; fill: currentColor; }
+  .a11y-fab:hover { background: var(--brand-dark); }
+  .a11y-fab:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; box-shadow: 0 0 0 3px var(--ink); }
+  .a11y-panel { width: min(320px, calc(100vw - 24px)); max-height: min(calc(100vh - 96px), 560px); max-height: min(calc(100dvh - 96px), 560px); overflow-y: auto; background: #fff; color: var(--text); border: 1px solid var(--field-border); border-radius: 16px; box-shadow: var(--shadow); padding: 16px; display: flex; flex-direction: column; gap: 12px; font-size: 0.95rem; line-height: 1.5; }
+  .a11y-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .a11y-title { font-family: var(--font-head); font-weight: 600; font-size: 1.15rem; color: var(--ink); }
+  .a11y-close { font: inherit; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--field-border); background: #fff; color: var(--ink); cursor: pointer; font-size: 1.3rem; line-height: 1; padding: 0; }
+  .a11y-size { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .a11y-size-label { grid-column: 1 / -1; color: var(--ink); font-weight: 700; }
+  .a11y-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .a11y-opt { font: inherit; font-size: 0.9rem; font-weight: 600; color: var(--ink); background: #fff; border: 1.5px solid var(--field-border); border-radius: 10px; padding: 10px 8px; cursor: pointer; min-height: 44px; text-align: center; }
+  .a11y-opt:hover { border-color: var(--ink); }
+  .a11y-opt[aria-pressed="true"] { background: var(--brand-dark); border-color: var(--brand-dark); color: #fff; }
+  .a11y-opt[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+  .a11y-reset { font: inherit; font-weight: 700; color: var(--ink); background: var(--alt); border: 1.5px solid var(--ink); border-radius: 10px; padding: 10px; cursor: pointer; min-height: 44px; }
+  .a11y-note { color: var(--muted); font-size: 0.85rem; }
+  .a11y-note a { color: var(--brand-dark); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .a11y-widget button:focus-visible, .a11y-widget a:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+  .a11y-widget .a11y-fab:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
+
+  /* User-selected modes (set by the widget) */
+  html.a11y-contrast { --ink: #000; --text: #000; --muted: #1A1A1A; --brand: #005B5A; --brand-dark: #003F3E; --brand-soft: #E6F2F1; --alt: #FFFFFF; --line: #000; --field-border: #000; --danger: #8A1008; }
+  html.a11y-contrast .closing p { color: #fff; }
+  html.a11y-contrast .card, html.a11y-contrast .compare, html.a11y-contrast .form-card { border-color: #000; }
+  html.a11y-links a { text-decoration: underline !important; text-underline-offset: 3px; font-weight: 700; }
+  html.a11y-readable { --font-head: Arial, "Arial Hebrew", sans-serif; --font-body: Arial, "Arial Hebrew", sans-serif; }
+  html.a11y-spacing body { line-height: 2; letter-spacing: 0.03em; word-spacing: 0.12em; }
+  html.a11y-spacing h1, html.a11y-spacing h2, html.a11y-spacing h3 { line-height: 1.5; }
+  html.a11y-calm, html.a11y-calm * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+  html.a11y-focus :focus-visible { outline: 4px solid #000 !important; outline-offset: 4px !important; box-shadow: 0 0 0 4px var(--amber) !important; }
+
+  @media (max-width: 1260px) { .brand-wrapper { padding-inline-start: 66px; } }
+  @media (max-width: 880px) {
+    .hero-grid { grid-template-columns: minmax(0, 1fr); }
+    .grid3, .pair { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+
+<script>
+  /* Applies saved accessibility preferences before first paint. Storage may be blocked, so every access is wrapped. */
+  (function () {
+    var KEY = "a11y-prefs-v1";
+    var D = { scale: 100, contrast: 0, links: 0, readable: 0, calm: 0, focus: 0, spacing: 0 };
+    var MAP = { contrast: "a11y-contrast", links: "a11y-links", readable: "a11y-readable", calm: "a11y-calm", focus: "a11y-focus", spacing: "a11y-spacing" };
+    function load() {
+      var p = {}, k;
+      for (k in D) p[k] = D[k];
+      try {
+        var s = JSON.parse(localStorage.getItem(KEY) || "{}");
+        for (k in D) { if (typeof s[k] === typeof D[k]) p[k] = s[k]; }
+      } catch (e) {}
+      return p;
+    }
+    function apply(p) {
+      var h = document.documentElement, k;
+      h.style.fontSize = p.scale === 100 ? "" : p.scale + "%";
+      for (k in MAP) h.classList.toggle(MAP[k], !!p[k]);
+    }
+    window.a11yPrefs = { KEY: KEY, D: D, load: load, apply: apply };
+    apply(load());
+  })();
+</script>
+
+</head>
+<body>
+
+<a class="skip" href="#main">דלגו לתוכן הראשי</a>
+
+<div class="a11y-widget" id="a11y-widget">
+  <button type="button" class="a11y-fab" id="a11y-fab" aria-expanded="false" aria-controls="a11y-panel" aria-label="תפריט נגישות">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.2" r="2.2"/><path d="M5 7.6c0-.5.4-.9.9-.9h12.2c.5 0 .9.4.9.9s-.4.9-.9.9h-4.2v3.1l2.4 7.3c.2.5-.1 1-.6 1.2s-1-.1-1.2-.6L12 14.1l-1.5 4.8c-.2.5-.7.8-1.2.6s-.8-.7-.6-1.2l2.4-7.3V8.5H7.4c-.5 0-.9-.4-.9-.9H5z"/></svg>
+  </button>
+  <div class="a11y-panel" id="a11y-panel" role="region" aria-labelledby="a11y-title" hidden>
+    <div class="a11y-head">
+      <p class="a11y-title" id="a11y-title">הגדרות נגישות</p>
+      <button type="button" class="a11y-close" id="a11y-close" aria-label="סגירת תפריט הנגישות"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="a11y-size">
+      <p class="a11y-size-label">גודל הטקסט: <span id="a11y-size-out" aria-live="polite">100%</span></p>
+      <button type="button" class="a11y-opt" id="a11y-dec">הקטנת טקסט</button>
+      <button type="button" class="a11y-opt" id="a11y-inc">הגדלת טקסט</button>
+    </div>
+    <div class="a11y-grid">
+      <button type="button" class="a11y-opt" data-pref="contrast" aria-pressed="false">ניגודיות גבוהה</button>
+      <button type="button" class="a11y-opt" data-pref="links" aria-pressed="false">הדגשת קישורים</button>
+      <button type="button" class="a11y-opt" data-pref="readable" aria-pressed="false">גופן קריא</button>
+      <button type="button" class="a11y-opt" data-pref="spacing" aria-pressed="false">ריווח טקסט</button>
+      <button type="button" class="a11y-opt" data-pref="focus" aria-pressed="false">מיקוד מודגש</button>
+      <button type="button" class="a11y-opt" data-pref="calm" aria-pressed="false">עצירת אנימציות</button>
+    </div>
+    <button type="button" class="a11y-reset" id="a11y-reset">איפוס הגדרות</button>
+    <p class="a11y-note">ההגדרות נשמרות בדפדפן הזה. התפריט נועד להקל על השימוש ונוסף להתאמות הקבועות בדף. <a href="#accessibility-statement" data-statement-link>להצהרת הנגישות</a></p>
+  </div>
+</div>
+
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand-wrapper">
+      <img src="Gishit.svg" alt="Gishit - גישה לקורסים" class="logo">
+      <span class="brand">אוטומציה לשיתוף חומרי קורס</span>
+    </div>
+    <button class="btn small" type="button" data-to-form>השאירו פרטים</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <div id="view-home">
+  <section class="hero" aria-labelledby="h-main">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow">למרצים ולמרצות</span>
+        <h1 id="h-main" tabindex="-1">תלמידים נרשמים לקורס, והחומרים מגיעים אליהם בלי שתשלחו אותם</h1>
+        <p class="lead">אוטומציה שמחברת את טופס ההרשמה לקורס לתיקיית ה-<span lang="en">Drive</span>. המטרה היא שהקישור יישלח לכל תלמיד במייל, בסמוך להרשמה.</p>
+        <ul class="checks">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-7"/></svg>הקישור לתיקיית הקורס נשלח לתלמיד בסמוך להרשמה</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-7"/></svg>במטרה לצמצם פעולות ידניות מצד המרצה</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-7"/></svg>חיסכון בזמן העבודה בכל פתיחת מחזור</li>
+        </ul>
+      </div>
+
+      <div class="form-card" id="form">
+        <div id="form-head">
+          <h2>השאירו פרטים</h2>
+          <p class="sub">הירשמו למוצר ונעדכן אתכם כשהוא יוצא לפועל.</p>
+        </div>
+        <form id="lead-form" novalidate aria-label="השארת פרטים">
+          <p class="req-note">כל השדות חובה.</p>
+          <div class="field">
+            <label for="full-name">שם מלא</label>
+            <input id="full-name" name="full-name" type="text" autocomplete="name" aria-required="true" aria-describedby="err-name">
+            <div class="err" id="err-name" role="alert"></div>
+          </div>
+          <div class="field">
+            <label for="phone">מספר טלפון</label>
+            <input id="phone" name="phone" type="tel" dir="ltr" autocomplete="tel" inputmode="tel" aria-required="true" aria-describedby="err-phone">
+            <div class="err" id="err-phone" role="alert"></div>
+          </div>
+          <div class="field">
+            <label for="email">כתובת מייל</label>
+            <input id="email" name="email" type="email" dir="ltr" autocomplete="email" inputmode="email" aria-required="true" aria-describedby="err-email">
+            <div class="err" id="err-email" role="alert"></div>
+          </div>
+          <button class="btn" type="submit">שליחת פרטים</button>
+        </form>
+        <div class="done" id="done" role="status" tabindex="-1" hidden>
+          <svg class="done-mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="none" stroke="currentColor" stroke-width="3"/><path d="M14 25l7 7 13-17" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <h2>הפרטים שלכם נשמרו</h2>
+          <p class="who">תודה, <span id="done-name"></span>. ניצור איתכם קשר בטלפון או במייל שהשארתם, כשהמוצר יצא לפועל.</p>
+          <p>אין צורך בפעולה נוספת מצדכם.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">הבעיה</span>
+        <h2>בכל מחזור מחדש, אותה עבודה ידנית</h2>
+      </div>
+      <div class="grid3">
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <h3>זמן תפעולי יקר</h3>
+          <p>פתיחת תיקייה ושליחת חומרים ידנית לכל סטודנט גוזלת זמן בכל מחזור מחדש.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12M6 21h12M7 3v3.5c0 1.5 5 3.5 5 5.5s-5 4-5 5.5V21M17 3v3.5c0 1.5-5 3.5-5 5.5s5 4 5 5.5V21"/></svg></div>
+          <h3>תלמידים ממתינים</h3>
+          <p>התהליך הידני יוצר עיכובים, והתלמידים ממתינים זמן ממושך לקבלת חומרי הלימוד.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 013-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 01-3 3H3"/></svg></div>
+          <h3>חזרה על אותן פעולות</h3>
+          <p>מי שנרשם באיחור מחייב לחזור ידנית על כל פעולות מתן הגישה מההתחלה.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">איך זה עובד</span>
+        <h2>שלושה שלבים, ואף אחד מהם לא עובר דרככם</h2>
+      </div>
+      <ol class="grid3">
+        <li class="card">
+          <div class="step-no" aria-hidden="true">1</div>
+          <h3>התלמיד ממלא טופס הרשמה</h3>
+          <p>שם מלא, מספר טלפון וכתובת מייל.</p>
+        </li>
+        <li class="card">
+          <div class="step-no" aria-hidden="true">2</div>
+          <h3>האוטומציה מקבלת את הפרטים</h3>
+          <p>היא נועדה לזהות נרשם שכבר קיים במערכת, ולא לשלוח לו את המייל פעם נוספת.</p>
+        </li>
+        <li class="card">
+          <div class="step-no" aria-hidden="true">3</div>
+          <h3>התלמיד מקבל מייל אישי</h3>
+          <p>במייל קישור ישיר לתיקיית הקורס ב-<span lang="en">Drive</span>, בסמוך להשלמת ההרשמה.</p>
+        </li>
+      </ol>
+      <p class="after-steps">התהליך נועד להתנהל ברקע, בלי פעולה מצד המרצה.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">היעד</span>
+        <h2>מרגע ההרשמה ועד שהקישור אצל התלמיד</h2>
+      </div>
+      <div class="compare">
+        <div class="row">
+          <div class="row-head"><span class="who">היום, בתהליך ידני</span><span class="val">המתנה שעלולה להיות ממושכת</span></div>
+        </div>
+        <div class="row">
+          <div class="row-head"><span class="who">עם האוטומציה (כיעד)</span><span class="val">המתנה קצרה יותר</span></div>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="stat">
+          <div class="n">פחות עבודה ידנית</div>
+          <p>בכל פתיחת מחזור או קורס נדרשת היום עבודה ידנית. היעד הוא לצמצם אותה באמצעות האוטומציה.</p>
+        </div>
+        <div class="stat">
+          <div class="n">פחות שכחה</div>
+          <p>היעד הוא שכל נרשם יקבל את הגישה בלי שמישהו צריך לזכור לשלוח אותה, גם כשההרשמה מאוחרת.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">כשמשהו משתבש</span>
+        <h2>המקרים החריגים נלקחו בחשבון</h2>
+      </div>
+      <div class="grid3">
+        <div class="card">
+          <h3>כתובת מייל שגויה</h3>
+          <p>הטופס לא יישלח, ויוצג הסבר ליד השדה הבעייתי.</p>
+        </div>
+        <div class="card">
+          <h3>מילוי כפול</h3>
+          <p>כתובת מייל שכבר קיימת במערכת לא תקבל את המייל שוב.</p>
+        </div>
+        <div class="card">
+          <h3>תקלה במערכת האוטומציה</h3>
+          <p>מתוכנן ניסיון חוזר אוטומטי, ובתקלה מתמשכת תועבר התראה למנהל המערכת.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap inner">
+      <h2>מתחילים לחסוך זמן בקורסים שלכם</h2>
+      <p>השאירו פרטים, ונעדכן אתכם כשהמוצר יוצא לפועל.</p>
+      <button class="btn light" type="button" data-to-form>לטופס ההרשמה</button>
+    </div>
+  </section>
+  </div>
+
+  <div id="view-statement" hidden>
+  <div class="wrap page-top">
+    <div class="statement" id="accessibility-statement">
+      <div><a class="btn small" href="#main" data-home-link>חזרה לדף הראשי</a></div>
+      <h1 id="h-statement" tabindex="-1">הצהרת נגישות</h1>
+      <p class="statement-date">תאריך עדכון ההצהרה: <time datetime="2026-10-25">25 באוקטובר 2026</time></p>
+      <p>המטרה היא שדף הנחיתה של "אוטומציה לשיתוף חומרי קורס" יהיה נגיש ככל האפשר לכלל המשתמשים, כולל אנשים עם מוגבלויות. נעשים מאמצים להתאים את הדף לרמה AA של הנחיות הנגישות <span lang="en">WCAG</span> ולתקן הישראלי ת"י 5568. ההצהרה מתארת את המצב נכון לתאריך העדכון, ואינה מהווה התחייבות לעמידה מלאה בתקן.</p>
+
+      <h2>התאמות שבוצעו בדף</h2>
+      <ul>
+        <li>התאמת הניגודיות בין טקסט לרקע, כולל טקסט משני, במטרה לעמוד ברמה AA.</li>
+        <li>לכל שדה בטופס יש תווית קבועה, ולא רק טקסט בתוך השדה.</li>
+        <li>ניווט במקלדת בסדר הגיוני, סימון ברור של המיקוד וקישור לדילוג אל התוכן הראשי.</li>
+        <li>מבנה כותרות מסודר, עם כותרת ראשית אחת.</li>
+        <li>הגדרת שפה (עברית) וכיוון כתיבה מימין לשמאל בראש המסמך.</li>
+        <li>הודעות שגיאה בטופס מוצגות בטקסט וקשורות לשדה שאליו הן מתייחסות.</li>
+        <li>אלמנטים גרפיים שנושאים מידע כוללים טקסט חלופי, ואלמנטים קישוטיים מוסתרים מטכנולוגיות מסייעות.</li>
+      </ul>
+
+      <h2>תפריט הנגישות</h2>
+      <p>בפינת המסך מופיע כפתור שפותח תפריט נגישות להתאמות אישיות: שינוי גודל הטקסט, ניגודיות גבוהה, הדגשת קישורים, גופן קריא, ריווח טקסט, מיקוד מודגש ועצירת אנימציות. התפריט נועד להקל על השימוש, ואינו מחליף את ההתאמות הקבועות בדף. ההגדרות נשמרות בדפדפן שבו נעשה בהן שימוש.</p>
+
+      <h2>הצ'אט בדף הנחיתה</h2>
+      <p>שיחת הצ'אט (הבוט) שמופיעה בדף הנחיתה היא כלי חיצוני של צד שלישי (<span lang="en">Botpress</span>). הכלי אינו חלק מהדף עצמו, והנגישות שלו נקבעת על ידי הספק שלו. הוא לא נבדק במסגרת הצהרה זו. מי שמתקשה להשתמש בו יכול לפנות במייל, כמפורט בהמשך.</p>
+
+      <h2>מגבלות</h2>
+      <p>הדף נבדק ב-25 באוקטובר 2026 בבדיקה עצמית וממוחשבת של ניגודיות, מבנה כותרות, תוויות שדות וניווט במקלדת. לא בוצעה בדיקה עם קוראי מסך או ביקורת של גורם נגישות מוסמך, וייתכן שנותרו ליקויים.</p>
+
+      <h2>פנייה בנושא נגישות</h2>
+      <p>רכז נגישות: קארינה דרור. נכון לעכשיו, הפנייה בנושא נגישות היא במייל בלבד: <a href="mailto:teacher.karinad@gmail.com" dir="ltr">teacher.karinad@gmail.com</a>. מומלץ לציין בפנייה את הקושי שנתקלתם בו ואת הדפדפן או הטכנולוגיה המסייעת שבהם השתמשתם.</p>
+    </div>
+  </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>קארינה דרור</span>
+    <a href="#accessibility-statement" data-statement-link>הצהרת נגישות</a>
+    <p class="disclaimer">המידע בדף הוא תיאור כללי של המוצר המתוכנן, ואינו מהווה התחייבות לתוצאה, למועד או לנתון כלשהו.</p>
+  </div>
+</footer>
+
+
+<script>
+  (function () {
+    var A = window.a11yPrefs, STEPS = [100, 115, 130, 150];
+    var prefs = A.load();
+    if (STEPS.indexOf(prefs.scale) < 0) prefs.scale = 100;
+    var fab = document.getElementById("a11y-fab"), panel = document.getElementById("a11y-panel");
+    var out = document.getElementById("a11y-size-out"), inc = document.getElementById("a11y-inc"), dec = document.getElementById("a11y-dec");
+    var toggles = Array.prototype.slice.call(document.querySelectorAll("#a11y-panel [data-pref]"));
+
+    function save() { try { localStorage.setItem(A.KEY, JSON.stringify(prefs)); } catch (e) {} }
+    function sync() {
+      A.apply(prefs);
+      out.textContent = prefs.scale + "%";
+      toggles.forEach(function (b) { b.setAttribute("aria-pressed", prefs[b.getAttribute("data-pref")] ? "true" : "false"); });
+      dec.setAttribute("aria-disabled", prefs.scale <= STEPS[0] ? "true" : "false");
+      inc.setAttribute("aria-disabled", prefs.scale >= STEPS[STEPS.length - 1] ? "true" : "false");
+    }
+    function step(dir) {
+      var i = STEPS.indexOf(prefs.scale) + dir;
+      if (i < 0 || i >= STEPS.length) return;
+      prefs.scale = STEPS[i]; save(); sync();
+    }
+    function openPanel() { panel.hidden = false; fab.setAttribute("aria-expanded", "true"); dec.focus(); }
+    function closePanel(returnFocus) { panel.hidden = true; fab.setAttribute("aria-expanded", "false"); if (returnFocus) fab.focus(); }
+
+    fab.addEventListener("click", function () { if (panel.hidden) openPanel(); else closePanel(true); });
+    document.getElementById("a11y-close").addEventListener("click", function () { closePanel(true); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !panel.hidden) closePanel(true); });
+    inc.addEventListener("click", function () { step(1); });
+    dec.addEventListener("click", function () { step(-1); });
+    toggles.forEach(function (b) {
+      b.addEventListener("click", function () {
+        var k = b.getAttribute("data-pref");
+        prefs[k] = prefs[k] ? 0 : 1; save(); sync();
+      });
+    });
+    document.getElementById("a11y-reset").addEventListener("click", function () {
+      for (var k in A.D) prefs[k] = A.D[k];
+      save(); sync();
+    });
+    Array.prototype.forEach.call(panel.querySelectorAll("[data-statement-link]"), function (a) {
+      a.addEventListener("click", function () { closePanel(false); });
+    });
+    sync();
+  })();
+</script>
+<script>
+  var form = document.getElementById("lead-form");
+  var doneBox = document.getElementById("done");
+  var formHead = document.getElementById("form-head");
+  var fields = {
+    name: { input: document.getElementById("full-name"), err: document.getElementById("err-name") },
+    phone: { input: document.getElementById("phone"), err: document.getElementById("err-phone") },
+    email: { input: document.getElementById("email"), err: document.getElementById("err-email") }
+  };
+
+  function check(key) {
+    var v = fields[key].input.value.trim();
+    if (key === "name") {
+      return v ? "" : "חסר שם מלא.";
+    }
+    if (key === "phone") {
+      if (!v) return "חסר מספר טלפון.";
+      var digits = v.replace(/\D/g, "");
+      if (!/^[\d\s\-+()]+$/.test(v) || digits.length < 9 || digits.length > 15) {
+        return "מספר הטלפון אינו תקין. הזינו לפחות 9 ספרות.";
+      }
+      return "";
+    }
+    if (!v) return "חסרה כתובת מייל. בלעדיה לא נוכל ליצור איתכם קשר.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+      return "כתובת המייל אינה תקינה. בדקו שהיא כוללת @ ושם דומיין.";
+    }
+    return "";
+  }
+
+  function show(key, msg) {
+    fields[key].err.textContent = msg;
+    fields[key].input.setAttribute("aria-invalid", msg ? "true" : "false");
+  }
+
+  Object.keys(fields).forEach(function (key) {
+    fields[key].input.addEventListener("input", function () {
+      if (fields[key].err.textContent) show(key, check(key));
+    });
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var firstBad = null;
+    Object.keys(fields).forEach(function (key) {
+      var msg = check(key);
+      show(key, msg);
+      if (msg && !firstBad) firstBad = fields[key].input;
+    });
+    if (firstBad) { firstBad.focus(); return; }
+    document.getElementById("done-name").textContent = fields.name.input.value.trim();
+    form.hidden = true;
+    formHead.hidden = true;
+    doneBox.hidden = false;
+    doneBox.focus();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-to-form]"), function (btn) {
+    btn.addEventListener("click", function () {
+      var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.classList.contains("a11y-calm");
+      document.getElementById("form").scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "center" });
+      if (!form.hidden) document.getElementById("full-name").focus({ preventScroll: true });
+    });
+  });
+
+  /* Accessibility statement as a separate screen inside this file, so the link never depends on a second file. */
+  (function () {
+    var HASH = "#accessibility-statement";
+    var viewHome = document.getElementById("view-home"), viewStatement = document.getElementById("view-statement");
+    var baseTitle = document.title;
+    var headerBtn = document.querySelector("header [data-to-form]");
+    function show(name, move) {
+      var st = name === "statement";
+      viewHome.hidden = st;
+      viewStatement.hidden = !st;
+      document.title = st ? "הצהרת נגישות" : baseTitle;
+      if (headerBtn) headerBtn.hidden = st;
+      Array.prototype.forEach.call(document.querySelectorAll("footer [data-statement-link]"), function (a) {
+        if (st) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+      });
+      if (move) {
+        window.scrollTo(0, 0);
+        document.getElementById(st ? "h-statement" : "h-main").focus({ preventScroll: true });
+      }
+    }
+    function go(name) {
+      show(name, true);
+      try {
+        if (name === "statement") history.pushState(null, "", HASH);
+        else history.pushState(null, "", location.pathname + location.search);
+      } catch (e) {}
+    }
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest) return;
+      if (e.target.closest("[data-statement-link]")) { e.preventDefault(); go("statement"); return; }
+      if (e.target.closest("[data-home-link]")) { e.preventDefault(); go("home"); return; }
+      var skip = e.target.closest(".skip");
+      if (skip) { e.preventDefault(); document.getElementById("main").focus(); }
+    });
+    function fromLocation() { show(location.hash === HASH ? "statement" : "home", true); }
+    window.addEventListener("popstate", fromLocation);
+    window.addEventListener("hashchange", fromLocation);
+    show(location.hash === HASH ? "statement" : "home", false);
+  })();
+</script>
+
+<script src="https://cdn.botpress.cloud/webchat/v5.0/inject.js"></script>
+<script src="https://files.bpcontent.cloud/2026/10/21/15/20261021155841-7UW3VXI2.js" defer></script>
+</body>
+</html>
